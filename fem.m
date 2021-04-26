@@ -31,13 +31,7 @@ for i = 1:numel(M_el)
 end
 
 b = zeros(numel(M_coor),1);
-left = M_coor(:,1);
-for i = 1:length(left)
-    n = left(i);
-    A(n,:) = 0;
-    A(n,n) = 1;
-    b(n) = c0;
-end
+
 right = M_coor(:,end);
 for i = 1:length(right)
     n = right(i);
@@ -48,18 +42,24 @@ end
 down = M_coor(1,:);
 for i = 1:length(down)
     n = down(i);
-    A(n,:) = 0;
-    A(n,n) = 1;
+%     A(n,:) = 0;
+%     A(n,n) = 1;
     b(n) = 0;
 end
 up = M_coor(end,:);
 for i = 1:length(up)
     n = up(i);
-    A(n,:) = 0;
-    A(n,n) = 1;
+%     A(n,:) = 0;
+%     A(n,n) = 1;
     b(n) = 0;
 end
-
+left = M_coor(:,1);
+for i = 1:length(left)
+    n = left(i);
+    A(n,:) = 0;
+    A(n,n) = 1;
+    b(n) = c0;
+end
 x = A\b;
 [xx,yy]=meshgrid(linspace(0,L,Nxx),linspace(0,H,Nyy));
 zz = reshape(x,Nyy,[]);
