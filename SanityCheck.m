@@ -5,7 +5,7 @@ function [] = SanityCheck(C, H, L, alpha, D, k)
     
     [g_X, g_Y] = meshgrid(linspace(0,L,n_x),linspace(0,H,n_y)); %global coordinate
     % v(y)
-    V_y = alpha * (H^2 / 4 - g_Y.^2);
+    V_y = alpha * (H^2 / 4 - (g_Y - H/2).^2);
     % d_c / d_x
     [d_c_d_x, d_c_d_y] = gradient(C, dx, dy);
     div_C = divergence(g_X,g_Y,d_c_d_x,d_c_d_y);
@@ -14,5 +14,6 @@ function [] = SanityCheck(C, H, L, alpha, D, k)
     
     figure();
     contourf(delta_C);
+    title('error calculated by FDM')
     colorbar;
 end
