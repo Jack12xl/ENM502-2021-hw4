@@ -6,6 +6,9 @@ function [val] = gq(phi1,phi2,phi1_de,phi2_de,v,D,k,J)
 
 Jinv = inv(J);
 
+%% 1 point is the bottom left (-sqrt(3/5),-sqrt(3/5)
+%% 9 point is the upper right ( sqrt(3/5), sqrt(3/5)
+
 % 1 point
 val1 = v(1)*phi1(-sqrt(3/5),-sqrt(3/5))*(Jinv(1,:)*phi2_de(-sqrt(3/5),-sqrt(3/5)))+...
     D*((Jinv*phi1_de(-sqrt(3/5),-sqrt(3/5)))'*(Jinv*phi2_de(-sqrt(3/5),-sqrt(3/5))))+...
