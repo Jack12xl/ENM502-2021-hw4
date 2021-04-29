@@ -62,6 +62,34 @@ function [x] = fem(Nx, Ny, L, H, alpha, D, k, c0)
     %     A(n,n) = 1;
     %     b(n) = 0;
     % end
+    
+%% extra credit
+%     hard code the upper boundary(n*gradient(C) = )
+	up = M_coor(end, :);
+    dL = L / Nx;
+%     w=k*D;
+    w=10;
+    for i = 1:length(up)
+        n = up(i);
+        
+        if i == 1
+            n_nxt = up(i+1);
+            A(n, n) = A(n, n) + dL / 6 * (2 * w);
+            A(n, n_nxt) = A(n, n_nxt) + dL / 6 * w;
+        elseif i == length(up)
+            n_prv = up(i-1);
+            A(n, n) = A(n, n) + dL / 6 * (2 * w);
+            A(n, n_prv) = A(n, n_prv) + dL / 6 * w;
+        else
+            A(n, n) = A(n, n) + dL / 6 * (4 * w);
+            n_prv = up(i-1);
+            n_nxt = up(i+1);
+            A(n, n_nxt) = A(n, n_nxt) + dL / 6 * w;
+            A(n, n_prv) = A(n, n_prv) + dL / 6 * w;
+        end
+        
+    end
+    
     left = M_coor(:,1);
     for i = 1:length(left)
         n = left(i);

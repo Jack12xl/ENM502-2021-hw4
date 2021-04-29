@@ -102,6 +102,30 @@ As expected, the boundries show a bigger discrepancy, since in **FDM** the bound
 
 Basically, the results show discrepancies under the tolerance, which justifies the correctness of the **FEM** results. 
 
+#### Extra Credit 2, non-zero Neumann boundary
+
+In normal setting, we deal with the upper and bottom with no flux boundary conditions. For extra credit, as required, we would like to set the upper as **Neumann boundary**. See the image below.
+
+![](./results/extra/q.jpg)
+
+For the **weak form**, we could make some adjustment to the upper boundary elements as below:
+
+![](./results/extra/weak_form.jpg)
+
+So we need adjust for the solver is to add line integral on the upper boundries of the field. 
+
+So the results would be
+
+![](./results/extra/ec.png)
+
+Due to outlet on the upper boundary, the fluid tends to go through from the top.
+
+Compared with the solution solved by **Wolfram** **Mathematica**:
+
+![](./results/extra/mathematica.jpg)
+
+We could see that our solver could achieve comparable results.
+
 #### Conclusion
 
 1. **FEM** Computationally expensive but more accurate compared to **FDM**. 
@@ -111,8 +135,6 @@ Basically, the results show discrepancies under the tolerance, which justifies t
 #### Code
 
 Github [link](https://github.com/Jack12xl/ENM502-2021-hw4)
-
-
 
 ##### Reference:
 
