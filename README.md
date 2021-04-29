@@ -128,9 +128,14 @@ We could see that our solver could achieve comparable results.
 
 #### Conclusion
 
+In this project, we use **FEM** to solve a laminar flow in a rectangular channel with **dirichlet** and **Neumann**  boundary conditions.
+
 1. **FEM** Computationally expensive but more accurate compared to **FDM**. 
-2. FEM error mainly contrate on the upper left and bottom right in our cases.
-3. ...
+   1. Compared to **FDM**, the cost  lies in 
+      1. the assembling the `K` matrix, which depends on several near points(in 2D is `4`).
+      2. The bandwidth of `A`(`Ax=b`) comes larger for **FEM**, so that  solving the linear equation takes relatively more time.
+2. **FEM** error mainly contrate on the upper left and bottom right in our cases.
+   1. This is probably due to at the very beginning, the concentration is high and **Reynold number** is relatively high(which depends on **density**). 
 
 #### Code
 
