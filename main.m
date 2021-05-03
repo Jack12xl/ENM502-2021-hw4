@@ -1,6 +1,6 @@
 clear all; clc
 %% run base case
-L=10; H=2; alpha=1;D=1;k=0; c0=1;
+L=10; H=2; alpha=10;D=1;k=16; c0=1;
 Nx =100; Ny=50;
 x = fem(Nx, Ny, L, H, alpha, D, k , c0);
 

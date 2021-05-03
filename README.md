@@ -25,6 +25,15 @@ Here we briefly introduce the steps of finite element method(**FEM**). See the d
 #### Problem Setup and Formulation Weak form of PDE
 
 Here we derive the **weak form** in the form of handwriting.
+$$
+\text { with } c \sim \tilde{c}=\sum_{j=1}^{N} c_{j} \cdot \phi^{j}(x, y), N \Rightarrow \# \text { of grid points. }
+$$
+$$
+\begin{array}{l}
+\text { Applying Galerkin } \\
+\text { Residuals: } R_{i}=\iint_{i}\left[n(y) \frac{\partial c}{\partial x}-D \nabla^{2} c+k c\right] d A=0, \quad i=1: N
+\end{array}
+$$
 
 ![](./results/deduction/weak_form.jpg)
 
@@ -114,15 +123,45 @@ For the **weak form**, we could make some adjustment to the upper boundary eleme
 
 So we need adjust for the solver is to add line integral on the upper boundries of the field. 
 
-So the results would be
+Here we adjust the `k` and compare the results with **Wolfram** **Mathematica** under the same parameters. 
 
-![](./results/extra/ec.png)
+```mathematica
+(*define variables*)
+d = 1;
+k = 16;
+alpha = 10;
+L = 10;
+H = 2;
+c0 = 1;
+v[y_] = alpha * (H^2 / 4  - (y)^2);
+op = d Laplacian[c[x, y], {x, y}] - k *c[x, y] - 
+   v[y] D[c[x, y], {x, 1}];
+cond = DirichletCondition[c[x, y] == c0, x == 0];
+
+sol = NDSolveValue[{op == 
+    NeumannValue[0, x == L] + NeumannValue[0, y == -H/2] + 
+     NeumannValue[k * c[x, y], y == H/2] + cond}, 
+  c, {x, 0, L}, {y, -H/2, H/2}]
+  
+Plot3D[%[x, y], {x, 0, L}, {y, -H/2, H/2}]
+```
+
+
+
+| Our results                     | **Wolfram** **Mathematica** results |
+| ------------------------------- | ----------------------------------- |
+| ![](./results/extra/k_0/r.png)  | ![](./results/extra/k_0/m.png)      |
+| ![](./results/extra/k_2/r.png)  | ![](./results/extra/k_2/m.png)      |
+| ![](./results/extra/k_4/r.png)  | ![](./results/extra/k_4/m.png)      |
+| ![](./results/extra/k_16/r.png) | ![](./results/extra/k_16/m.png)     |
+
+
 
 Due to outlet on the upper boundary, the fluid tends to go through from the top.
 
 Compared with the solution solved by **Wolfram** **Mathematica**:
 
-![](./results/extra/mathematica.jpg)
+
 
 We could see that our solver could achieve comparable results.
 

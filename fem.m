@@ -68,7 +68,7 @@ function [x] = fem(Nx, Ny, L, H, alpha, D, k, c0)
 	up = M_coor(end, :);
     dL = L / Nx;
 %     w=k*D;
-    w=10;
+    w=k;
     for i = 1:length(up)
         n = up(i);
         
