@@ -114,21 +114,63 @@ For the **weak form**, we could make some adjustment to the upper boundary eleme
 
 So we need adjust for the solver is to add line integral on the upper boundries of the field. 
 
-So the results would be
+Here we adjust the `k` and compare the results with **Wolfram** **Mathematica** under the same parameters. Here is code in **Mathematica** to solve the with the boundary condition.
 
-![](./results/extra/ec.png)
+```mathematica
+(*define variables*)
+d = 1;
+k = 16;
+alpha = 10;
+L = 10;
+H = 2;
+c0 = 1;
+v[y_] = alpha * (H^2 / 4  - (y)^2);
+op = d Laplacian[c[x, y], {x, y}] - k *c[x, y] - 
+   v[y] D[c[x, y], {x, 1}];
+cond = DirichletCondition[c[x, y] == c0, x == 0];
 
-Due to outlet on the upper boundary, the fluid tends to go through from the top.
+sol = NDSolveValue[{op == 
+    NeumannValue[0, x == L] + NeumannValue[0, y == -H/2] + 
+     NeumannValue[k * c[x, y], y == H/2] + cond}, 
+  c, {x, 0, L}, {y, -H/2, H/2}]
+  
+Plot3D[%[x, y], {x, 0, L}, {y, -H/2, H/2}]
+```
 
-Compared with the solution solved by **Wolfram** **Mathematica**:
 
-![](./results/extra/mathematica.jpg)
 
-We could see that our solver could achieve comparable results.
+| Our results                     | **Wolfram** **Mathematica** results |
+| ------------------------------- | ----------------------------------- |
+| ![](./results/extra/k_0/r.png)  | ![](./results/extra/k_0/m.png)      |
+| ![](./results/extra/k_2/r.png)  | ![](./results/extra/k_2/m.png)      |
+| ![](./results/extra/k_4/r.png)  | ![](./results/extra/k_4/m.png)      |
+| ![](./results/extra/k_16/r.png) | ![](./results/extra/k_16/m.png)     |
+
+#### Results and analysis
+
+Here we compare the results when `k=0, 2,  4, 16`, notice that `k` is the (first order) reaction rate constant. 
+
+When `k == 0`, our result meets the expectation. Since without the  `k` term, there is no reaction. Here we could visualize a steady flow through the channel(the reason why our result seems not like a flat plane is because the numerical precision).
+
+When `k` starts to become larger, we could see that the flow concentration starts to drop more and more quickly. Note that we set the upper boundary(`y == 1`) as a non-zero Neumann boundary, so the fluid tends to leak(react) through the upper boundary. So the flow drops more quickly in the upper boundary. 
+
+When  `k == 16`, we could see that the results between two solver start to diverge(especially when `x == 0`). But we think **Mathematica** has something wrong with the solver setting and our solver seems to be more stable and reasonable since the boundary condition on the left hand side(`x == 0`)should be hard code to `0`. And also intuitively there shouldn't be a steady plane at the start of x-axis. 
+
+
+
+So we took a further step on **Mathematica** to see how `k` would influence the results.
+
+We found that when `k ` `>=` `4.25` , the incorrect-x-axis-boundary results emerges. In the mean time, our solver seems to be still stable.
+
+| `k = 4.25`                      | `k = 5`                      | `k = 8`                      |
+| ------------------------------- | ---------------------------- | ---------------------------- |
+| ![](./results/extra/m/4_25.png) | ![](./results/extra/m/5.png) | ![](./results/extra/m/8.png) |
+
+
 
 #### Conclusion
 
-In this project, we use **FEM** to solve a laminar flow in a rectangular channel with **dirichlet** and **Neumann**  boundary conditions.
+In this project, we use **FEM** to solve a laminar flow in a rectangular channel with **Dirichlet** and **Neumann**  boundary conditions.
 
 1. **FEM** Computationally expensive but more accurate compared to **FDM**. 
    1. Compared to **FDM**, the cost  lies in 
